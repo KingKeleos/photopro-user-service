@@ -26,7 +26,7 @@ type Location struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          *string                `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Street        *string                `protobuf:"bytes,2,opt,name=street" json:"street,omitempty"`
-	StreetNumber  *string                `protobuf:"bytes,3,opt,name=streetNumber" json:"streetNumber,omitempty"`
+	StreetNumber  *uint32                `protobuf:"varint,3,opt,name=streetNumber" json:"streetNumber,omitempty"`
 	Country       *string                `protobuf:"bytes,4,opt,name=country" json:"country,omitempty"`
 	FederalState  *string                `protobuf:"bytes,5,opt,name=federalState" json:"federalState,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -77,11 +77,11 @@ func (x *Location) GetStreet() string {
 	return ""
 }
 
-func (x *Location) GetStreetNumber() string {
+func (x *Location) GetStreetNumber() uint32 {
 	if x != nil && x.StreetNumber != nil {
 		return *x.StreetNumber
 	}
-	return ""
+	return 0
 }
 
 func (x *Location) GetCountry() string {
@@ -1058,7 +1058,7 @@ const file_grpc_user_service_proto_rawDesc = "" +
 	"\bLocation\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
 	"\x06street\x18\x02 \x01(\tR\x06street\x12\"\n" +
-	"\fstreetNumber\x18\x03 \x01(\tR\fstreetNumber\x12\x18\n" +
+	"\fstreetNumber\x18\x03 \x01(\rR\fstreetNumber\x12\x18\n" +
 	"\acountry\x18\x04 \x01(\tR\acountry\x12\"\n" +
 	"\ffederalState\x18\x05 \x01(\tR\ffederalState\"Z\n" +
 	"\n" +

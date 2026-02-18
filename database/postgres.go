@@ -8,6 +8,8 @@ import (
 	"github.com/KingKeleos/photopro-user-service/config"
 )
 
+var PGClient *sql.DB
+
 func Connect(ctx context.Context, conf *config.DatabaseConfig) (*sql.DB, error) {
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		conf.Host, conf.Port, conf.Username, conf.Password, conf.DatabaseName, conf.SSLMode)

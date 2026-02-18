@@ -19,7 +19,7 @@ service UserService{
 message Location{
     string name = 1;
     string street = 2;
-    string streetNumber = 3;
+    uint32 streetNumber = 3;
     string country = 4;
     string federalState = 5;
 }
