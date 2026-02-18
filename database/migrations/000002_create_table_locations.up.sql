@@ -6,5 +6,5 @@ create table if not exists locations(
     street varchar(255),
     street_number int,
     country varchar(255),
-    fedaral_state varchar(255)
+    federal_state varchar(255)
 )

@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net"
 	"os"
+	"strconv"
 
 	"github.com/KingKeleos/photopro-user-service"
 	"github.com/KingKeleos/photopro-user-service/config"
@@ -44,10 +45,16 @@ func main() {
 		slog.Info("reading port from env", "info", fmt.Errorf("PORT is empty, using default"))
 		port = "8080"
 	}
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", port))
+	dport, err := strconv.Atoi(port)
+	if err != nil {
+		slog.Error("converting port", "error", err)
+		os.Exit(1)
+	}
+	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", dport))
 	if err != nil {
 		slog.Error("failed to listen", "error", err)
 	}
+	slog.Info("running service on localhost", "port", dport)
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
 	pb.RegisterUserServiceServer(grpcServer, userservice.NewUserServer())

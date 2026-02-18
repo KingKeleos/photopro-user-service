@@ -11,11 +11,7 @@ import (
 )
 
 type UserServer struct {
-}
-
-// mustEmbedUnimplementedUserServiceServer implements photopro_user_service.UserServiceServer.
-func (s UserServer) mustEmbedUnimplementedUserServiceServer() {
-	panic("unimplemented")
+	pb.UnimplementedUserServiceServer
 }
 
 func NewUserServer() UserServer {
@@ -23,7 +19,6 @@ func NewUserServer() UserServer {
 }
 
 func (s UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
-	resp := pb.CreateUserResponse{}
 	location := user.Location{
 		Name:         *req.User.Location.Name,
 		Street:       *req.User.Location.Street,
@@ -43,6 +38,18 @@ func (s UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (
 	}
 	user.Create(ctx)
 
+	resp := pb.CreateUserResponse{User: &pb.User{
+		Username: &user.Username,
+		Email:    &user.EMail,
+		Password: &user.Password,
+		Location: &pb.Location{
+			Name:         &location.Name,
+			Street:       &location.Street,
+			StreetNumber: &location.StreetNumber,
+			Country:      &location.Country,
+			FederalState: &location.FederalState,
+		},
+	}}
 	return &resp, nil
 }
 
