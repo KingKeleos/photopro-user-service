@@ -36,7 +36,7 @@ func (s UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	user.Create(ctx)
+	err := user.Create(ctx)
 
 	resp := pb.CreateUserResponse{User: &pb.User{
 		Username: &user.Username,
@@ -50,7 +50,7 @@ func (s UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (
 			FederalState: &location.FederalState,
 		},
 	}}
-	return &resp, nil
+	return &resp, err
 }
 
 // mustEmbedUnimplementedUserServiceServer implements photopro_user_service.UserServiceServer.
@@ -59,32 +59,39 @@ func (s UserServer) mustEmbedUnimplementedUserServiceServer() {
 }
 
 // CreateRole implements photopro_user_service.UserServiceServer.
-func (s UserServer) CreateRole(context.Context, *pb.CreateRolesRequest) (*pb.CreateRolesResponse, error) {
+func (s UserServer) CreateRole(ctx context.Context, req *pb.CreateRolesRequest) (*pb.CreateRolesResponse, error) {
 	panic("unimplemented")
 }
 
 // DeleteUser implements photopro_user_service.UserServiceServer.
-func (s UserServer) DeleteUser(context.Context, *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
-	panic("unimplemented")
+func (s UserServer) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+	user := user.User{
+		ID: req.GetUserID(),
+	}
+	err := user.Delete(ctx)
+	resp := pb.DeleteUserResponse{
+		Username: &user.Username,
+	}
+	return &resp, err
 }
 
 // GetUser implements photopro_user_service.UserServiceServer.
-func (s UserServer) GetUser(context.Context, *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+func (s UserServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	panic("unimplemented")
 }
 
 // ListPermissions implements photopro_user_service.UserServiceServer.
-func (s UserServer) ListPermissions(context.Context, *pb.ListPermissionsRequest) (*pb.ListPermissionsResponse, error) {
+func (s UserServer) ListPermissions(ctx context.Context, req *pb.ListPermissionsRequest) (*pb.ListPermissionsResponse, error) {
 	panic("unimplemented")
 }
 
 // ListRoles implements photopro_user_service.UserServiceServer.
-func (s UserServer) ListRoles(context.Context, *emptypb.Empty) (*pb.ListRolesResponse, error) {
+func (s UserServer) ListRoles(ctx context.Context, req *emptypb.Empty) (*pb.ListRolesResponse, error) {
 	panic("unimplemented")
 }
 
 // UpdatePermissions implements photopro_user_service.UserServiceServer.
-func (s UserServer) UpdatePermissions(context.Context, *pb.UpdatePermissionsRequest) (*pb.UpdatePermissionsResponse, error) {
+func (s UserServer) UpdatePermissions(ctx context.Context, req *pb.UpdatePermissionsRequest) (*pb.UpdatePermissionsResponse, error) {
 	panic("unimplemented")
 }
 
