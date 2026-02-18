@@ -1,0 +1,114 @@
+edition = "2023";
+import "google/protobuf/empty.proto";
+option go_package="github.com/KingKeleos/photopro-user-service";
+
+service UserService{
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+    rpc GetUser(GetUserRequest) returns (GetUserResponse);
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+
+    rpc CreateRole(CreateRolesRequest) returns (CreateRolesResponse);
+    rpc ListRoles(google.protobuf.Empty) returns (ListRolesResponse);
+    rpc UpdateRoles(UpdateRolesRequest) returns (UpdateRolesResponse);
+
+    rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsResponse);
+    rpc UpdatePermissions(UpdatePermissionsRequest) returns (UpdatePermissionsResponse);
+}
+
+message Location{
+    string name = 1;
+    string street = 2;
+    string streetNumber = 3;
+    string country = 4;
+    string federalState = 5;
+}
+
+message Permission{
+    uint64 userID = 1;
+    uint64 projectID = 2;
+    uint64 RoleID = 3;
+}
+
+message Role{
+    uint64 id = 1;
+    string name = 2;
+}
+
+message User{
+    string username = 1;
+    string email = 2;
+    string password = 3;
+    Location location = 4;
+}
+
+message CreateUserRequest{
+    User user = 1;
+    Role role = 2;
+}
+
+message CreateUserResponse{
+    User user = 1;
+}
+
+message GetUserRequest{
+    uint64 userID = 1;
+}
+
+message GetUserResponse{
+    User user = 1;
+}
+
+message UpdateUserRequest{
+    User user = 1;
+}
+
+message UpdateUserResponse{
+    User user = 1;
+}
+
+message DeleteUserRequest{
+    uint64 userID = 1;
+}
+
+message DeleteUserResponse{
+    string username = 1;
+}
+
+message CreateRolesRequest{
+    string rolename = 1;
+}
+
+message CreateRolesResponse{
+    Role role = 1;
+}
+
+message ListRolesResponse{
+    repeated Role roles = 1;
+}
+
+message UpdateRolesRequest{
+    uint64 roleID = 1;
+    uint64 roleName = 2;
+}
+
+message UpdateRolesResponse{
+    Role role = 1;
+}
+
+message ListPermissionsRequest{
+    uint64 userID = 1;
+}
+
+message ListPermissionsResponse{
+    repeated Permission permissions = 1;
+}
+
+message UpdatePermissionsRequest{
+    uint64 userID = 1;
+    repeated Permission permissions = 2;
+}
+
+message UpdatePermissionsResponse{
+    repeated Permission permissions = 1;
+}

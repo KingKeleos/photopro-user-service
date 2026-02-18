@@ -30,4 +30,5 @@ func main() {
 		slog.Error("migrating database", "error", err)
 		os.Exit(0)
 	}
+	slog.Info("finished migrating database")
 }
