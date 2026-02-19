@@ -464,7 +464,10 @@ func (x *GetUserResponse) GetUser() *User {
 
 type UpdateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *User                  `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
+	UserID        *uint64                `protobuf:"varint,1,opt,name=userID" json:"userID,omitempty"`
+	Email         *string                `protobuf:"bytes,2,opt,name=email" json:"email,omitempty"`
+	Password      *string                `protobuf:"bytes,3,opt,name=password" json:"password,omitempty"`
+	Location      *Location              `protobuf:"bytes,4,opt,name=location" json:"location,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -499,9 +502,30 @@ func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
 	return file_grpc_user_service_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *UpdateUserRequest) GetUser() *User {
+func (x *UpdateUserRequest) GetUserID() uint64 {
+	if x != nil && x.UserID != nil {
+		return *x.UserID
+	}
+	return 0
+}
+
+func (x *UpdateUserRequest) GetEmail() string {
+	if x != nil && x.Email != nil {
+		return *x.Email
+	}
+	return ""
+}
+
+func (x *UpdateUserRequest) GetPassword() string {
+	if x != nil && x.Password != nil {
+		return *x.Password
+	}
+	return ""
+}
+
+func (x *UpdateUserRequest) GetLocation() *Location {
 	if x != nil {
-		return x.User
+		return x.Location
 	}
 	return nil
 }
@@ -1082,9 +1106,12 @@ const file_grpc_user_service_proto_rawDesc = "" +
 	"\x0eGetUserRequest\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\x04R\x06userID\",\n" +
 	"\x0fGetUserResponse\x12\x19\n" +
-	"\x04user\x18\x01 \x01(\v2\x05.UserR\x04user\".\n" +
-	"\x11UpdateUserRequest\x12\x19\n" +
-	"\x04user\x18\x01 \x01(\v2\x05.UserR\x04user\"/\n" +
+	"\x04user\x18\x01 \x01(\v2\x05.UserR\x04user\"\x84\x01\n" +
+	"\x11UpdateUserRequest\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\x04R\x06userID\x12\x14\n" +
+	"\x05email\x18\x02 \x01(\tR\x05email\x12\x1a\n" +
+	"\bpassword\x18\x03 \x01(\tR\bpassword\x12%\n" +
+	"\blocation\x18\x04 \x01(\v2\t.LocationR\blocation\"/\n" +
 	"\x12UpdateUserResponse\x12\x19\n" +
 	"\x04user\x18\x01 \x01(\v2\x05.UserR\x04user\"+\n" +
 	"\x11DeleteUserRequest\x12\x16\n" +
@@ -1169,7 +1196,7 @@ var file_grpc_user_service_proto_depIdxs = []int32{
 	2,  // 2: CreateUserRequest.role:type_name -> Role
 	3,  // 3: CreateUserResponse.user:type_name -> User
 	3,  // 4: GetUserResponse.user:type_name -> User
-	3,  // 5: UpdateUserRequest.user:type_name -> User
+	0,  // 5: UpdateUserRequest.location:type_name -> Location
 	3,  // 6: UpdateUserResponse.user:type_name -> User
 	2,  // 7: CreateRolesResponse.role:type_name -> Role
 	2,  // 8: ListRolesResponse.roles:type_name -> Role

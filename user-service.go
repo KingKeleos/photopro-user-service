@@ -2,6 +2,7 @@ package userservice
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"github.com/KingKeleos/photopro-user-service/user"
@@ -38,18 +39,19 @@ func (s UserServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (
 	}
 	err := user.Create(ctx)
 
-	resp := pb.CreateUserResponse{User: &pb.User{
-		Username: &user.Username,
-		Email:    &user.EMail,
-		Password: &user.Password,
-		Location: &pb.Location{
-			Name:         &location.Name,
-			Street:       &location.Street,
-			StreetNumber: &location.StreetNumber,
-			Country:      &location.Country,
-			FederalState: &location.FederalState,
-		},
-	}}
+	resp := pb.CreateUserResponse{
+		User: &pb.User{
+			Username: &user.Username,
+			Email:    &user.EMail,
+			Password: &user.Password,
+			Location: &pb.Location{
+				Name:         &location.Name,
+				Street:       &location.Street,
+				StreetNumber: &location.StreetNumber,
+				Country:      &location.Country,
+				FederalState: &location.FederalState,
+			},
+		}}
 	return &resp, err
 }
 
@@ -101,6 +103,39 @@ func (s UserServer) UpdateRoles(context.Context, *pb.UpdateRolesRequest) (*pb.Up
 }
 
 // UpdateUser implements photopro_user_service.UserServiceServer.
-func (s UserServer) UpdateUser(context.Context, *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
-	panic("unimplemented")
+func (s UserServer) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+	location := user.Location{
+		Name:         *req.Location.Name,
+		Street:       *req.Location.Street,
+		StreetNumber: *req.Location.StreetNumber,
+		Country:      *req.Location.Country,
+		FederalState: *req.Location.FederalState,
+		UpdatedAt:    time.Now(),
+	}
+	user := user.User{
+		ID:        *req.UserID,
+		Password:  *req.Password,
+		EMail:     *req.Email,
+		Location:  location,
+		UpdatedAt: time.Now(),
+	}
+
+	err := user.Update(ctx)
+	if err != nil {
+		slog.Error("updating user", "error", err)
+	}
+	resp := pb.UpdateUserResponse{
+		User: &pb.User{
+			Email:    &user.EMail,
+			Password: &user.Password,
+			Location: &pb.Location{
+				Name:         &location.Name,
+				Street:       &location.Street,
+				StreetNumber: &location.StreetNumber,
+				Country:      &location.Country,
+				FederalState: &location.FederalState,
+			},
+		},
+	}
+	return &resp, err
 }

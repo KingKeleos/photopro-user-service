@@ -60,7 +60,10 @@ message GetUserResponse{
 }
 
 message UpdateUserRequest{
-    User user = 1;
+    uint64 userID = 1;
+    string email = 2;
+    string password = 3;
+    Location location = 4;
 }
 
 message UpdateUserResponse{
