@@ -79,7 +79,29 @@ func (s UserServer) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (
 
 // GetUser implements photopro_user_service.UserServiceServer.
 func (s UserServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
-	panic("unimplemented")
+	user := user.User{
+		ID: *req.UserID,
+	}
+	err := user.Get(ctx)
+	if err != nil {
+		slog.Error("getting user", "error", err)
+		return nil, err
+	}
+	resp := pb.GetUserResponse{
+		User: &pb.User{
+			Username: &user.Username,
+			Email:    &user.EMail,
+			Password: &user.Password,
+			Location: &pb.Location{
+				Name:         &user.Location.Name,
+				Street:       &user.Location.Street,
+				StreetNumber: &user.Location.StreetNumber,
+				FederalState: &user.Location.FederalState,
+				Country:      &user.Location.Country,
+			},
+		},
+	}
+	return &resp, err
 }
 
 // ListPermissions implements photopro_user_service.UserServiceServer.
@@ -98,7 +120,7 @@ func (s UserServer) UpdatePermissions(ctx context.Context, req *pb.UpdatePermiss
 }
 
 // UpdateRoles implements photopro_user_service.UserServiceServer.
-func (s UserServer) UpdateRoles(context.Context, *pb.UpdateRolesRequest) (*pb.UpdateRolesResponse, error) {
+func (s UserServer) UpdateRoles(ctx context.Context, req *pb.UpdateRolesRequest) (*pb.UpdateRolesResponse, error) {
 	panic("unimplemented")
 }
 

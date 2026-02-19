@@ -70,6 +70,25 @@ func (u *User) UpdateLocation(ctx context.Context) error {
 	return nil
 }
 
+func (u *User) GetLocation(ctx context.Context) error {
+	query := `select location_id from users where index = $1`
+	fields := []any{u.ID}
+	err := database.PGClient.QueryRowContext(ctx, query, fields...).Scan(&u.Location.ID)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return err
+	}
+	query = `select * from locations where index=$1`
+	fields = []any{u.Location.ID}
+	err = database.PGClient.QueryRowContext(ctx, query, fields...).Scan(
+		&u.Location.ID, &u.Location.Name, &u.Location.CreatedAt, &u.Location.UpdatedAt, &u.Location.Street,
+		&u.Location.StreetNumber, &u.Location.Country, &u.Location.FederalState,
+	)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return err
+	}
+	return nil
+}
+
 // Create will write the data of the User into the Database
 func (u *User) Create(ctx context.Context) error {
 	err := u.CreateLocation(ctx)
@@ -115,7 +134,19 @@ func (u *User) Update(ctx context.Context) error {
 	}
 	query := `update users set password=$1, email=$2, updated_at=$3 where index=$4`
 	fields := []any{u.Password, u.EMail, u.UpdatedAt, u.ID}
-	slog.Info("update query", "string", query, "fields", fields)
 	_, err = database.PGClient.ExecContext(ctx, query, fields...)
 	return err
+}
+
+func (u *User) Get(ctx context.Context) error {
+	err := u.GetLocation(ctx)
+	if err != nil {
+		slog.Error("getting location", "error", err)
+		return err
+	}
+	query := `select * from users where index=$1`
+	fields := []any{u.ID}
+	return database.PGClient.QueryRowContext(ctx, query, fields...).Scan(
+		&u.ID, &u.Username, &u.EMail, &u.Password, &u.Location.ID, &u.CreatedAt, &u.UpdatedAt,
+	)
 }
