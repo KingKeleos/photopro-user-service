@@ -62,7 +62,23 @@ func (s UserServer) mustEmbedUnimplementedUserServiceServer() {
 
 // CreateRole implements photopro_user_service.UserServiceServer.
 func (s UserServer) CreateRole(ctx context.Context, req *pb.CreateRolesRequest) (*pb.CreateRolesResponse, error) {
-	panic("unimplemented")
+	role := user.Role{
+		Name:      *req.Rolename,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	err := role.Create(ctx)
+	if err != nil {
+		slog.Error("creating new role", "error", err)
+		return nil, err
+	}
+	resp := pb.CreateRolesResponse{
+		Role: &pb.Role{
+			Id:   &role.ID,
+			Name: &role.Name,
+		},
+	}
+	return &resp, err
 }
 
 // DeleteUser implements photopro_user_service.UserServiceServer.
@@ -111,7 +127,24 @@ func (s UserServer) ListPermissions(ctx context.Context, req *pb.ListPermissions
 
 // ListRoles implements photopro_user_service.UserServiceServer.
 func (s UserServer) ListRoles(ctx context.Context, req *emptypb.Empty) (*pb.ListRolesResponse, error) {
-	panic("unimplemented")
+	var role user.Role
+
+	roles, err := role.List(ctx)
+	if err != nil {
+		slog.Error("listing roles", "error", err)
+		return nil, err
+	}
+	var respRole []*pb.Role
+	for _, r := range roles {
+		respRole = append(respRole, &pb.Role{
+			Id:   &r.ID,
+			Name: &r.Name,
+		})
+	}
+	resp := pb.ListRolesResponse{
+		Roles: respRole,
+	}
+	return &resp, nil
 }
 
 // UpdatePermissions implements photopro_user_service.UserServiceServer.
@@ -121,7 +154,24 @@ func (s UserServer) UpdatePermissions(ctx context.Context, req *pb.UpdatePermiss
 
 // UpdateRoles implements photopro_user_service.UserServiceServer.
 func (s UserServer) UpdateRoles(ctx context.Context, req *pb.UpdateRolesRequest) (*pb.UpdateRolesResponse, error) {
-	panic("unimplemented")
+	role := user.Role{
+		ID:        *req.RoleID,
+		Name:      *req.RoleName,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	err := role.Update(ctx)
+	if err != nil {
+		slog.Error("updating role", "error", err)
+		return nil, err
+	}
+	resp := pb.UpdateRolesResponse{
+		Role: &pb.Role{
+			Id:   &role.ID,
+			Name: &role.Name,
+		},
+	}
+	return &resp, err
 }
 
 // UpdateUser implements photopro_user_service.UserServiceServer.

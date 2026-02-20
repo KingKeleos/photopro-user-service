@@ -797,7 +797,7 @@ func (x *ListRolesResponse) GetRoles() []*Role {
 type UpdateRolesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RoleID        *uint64                `protobuf:"varint,1,opt,name=roleID" json:"roleID,omitempty"`
-	RoleName      *uint64                `protobuf:"varint,2,opt,name=roleName" json:"roleName,omitempty"`
+	RoleName      *string                `protobuf:"bytes,2,opt,name=roleName" json:"roleName,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -839,11 +839,11 @@ func (x *UpdateRolesRequest) GetRoleID() uint64 {
 	return 0
 }
 
-func (x *UpdateRolesRequest) GetRoleName() uint64 {
+func (x *UpdateRolesRequest) GetRoleName() string {
 	if x != nil && x.RoleName != nil {
 		return *x.RoleName
 	}
-	return 0
+	return ""
 }
 
 type UpdateRolesResponse struct {
@@ -1126,7 +1126,7 @@ const file_grpc_user_service_proto_rawDesc = "" +
 	"\x05roles\x18\x01 \x03(\v2\x05.RoleR\x05roles\"H\n" +
 	"\x12UpdateRolesRequest\x12\x16\n" +
 	"\x06roleID\x18\x01 \x01(\x04R\x06roleID\x12\x1a\n" +
-	"\broleName\x18\x02 \x01(\x04R\broleName\"0\n" +
+	"\broleName\x18\x02 \x01(\tR\broleName\"0\n" +
 	"\x13UpdateRolesResponse\x12\x19\n" +
 	"\x04role\x18\x01 \x01(\v2\x05.RoleR\x04role\"0\n" +
 	"\x16ListPermissionsRequest\x12\x16\n" +

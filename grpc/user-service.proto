@@ -92,7 +92,7 @@ message ListRolesResponse{
 
 message UpdateRolesRequest{
     uint64 roleID = 1;
-    uint64 roleName = 2;
+    string roleName = 2;
 }
 
 message UpdateRolesResponse{
